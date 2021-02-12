@@ -1,2 +1,2 @@
-# witty-adventure-game-name
+# witty-adventure-game
  Adventure game attempt numero uni 
