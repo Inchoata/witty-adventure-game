@@ -50,6 +50,11 @@ class LevelOneMap(Map):
                           "  |           |                          ",
                           "  -------------                          "]
 
+
+
+
+
+
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY:
