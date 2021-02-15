@@ -32,7 +32,7 @@ class LevelOneMap(Map):
 
     def display_menu(self):
 
-        self.first_map = ["                 wwwwwwwwwwwwwwww  ",
+        self.first_map = ["                      wwwwwwwwwwwwwwww  ",
                           "                      W              W  ",
                           "                      W              W  ",
                           "                      W              W  ",

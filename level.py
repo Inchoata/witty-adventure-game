@@ -1,5 +1,6 @@
 import pygame
 from menu import *
+from text import *
 
 class Level(Menu):
     def __init__(self, game):
@@ -9,7 +10,10 @@ class Level(Menu):
         self.cursor_rect = pygame.Rect(0, 0, 20, 20)  # Just makes a rect to represent the cursor
         self.offset = -5
 
-        # Text and option block templates
+        # Text and option box setup
+        self.text = Text()
+        self.controls = self.text.controls
+
         # Main text box
         self.twelth_x = self.game.DISPLAY_W/12
         self.twelth_y = self.game.DISPLAY_H/12
@@ -25,14 +29,8 @@ class Level(Menu):
         self.action_box_text_top = self.action_box_y + 30
         self.action_box_text_bottom = self.action_box_height - 30
 
-
-        # Text positions
-
-
-
     def draw_cursor(self):
         self.game.draw_text('*', 15, (self.cursor_rect.x, self.cursor_rect.y))
-
 
     def display_text_animation(self, text):
         w_pos = self.text_block_x
@@ -72,29 +70,15 @@ class LevelOne(Level):
     def __init__(self, game):
         Level.__init__(self, game)
         self.current_level = 1
-
-
-
-        self.opening_text = ["You awaken, head pounding. There is a bright light",
-                             "shining onto your face. You open your eyes. You're",
-                             "alone in a bright, clinical room. You are tied to a",
-                             "surgical operating table. There are surgical ",
-                             "instruments on a table beside you. It looks like you",
-                             "could lean over and reach the tools with your mouth.",
-                             "What will you do?"]
-
-        self.options =      ["A) Cry for help.",
-                             "B) Attempt to lean over to reach a scalpel ",
-                             "   with your mouth.",
-                             "C) Look around."]
-
-        self.controls =      "I - Inventory         M - Map       ENTER - Main Menu"
+        self.text = LevelOneText()
+        self.opening_text = self.text.opening_text
+        self.options = self.text.options
 
         # Positions for text in player action box
         self.state = "A"
         self.A_x, self.A_y = (self.action_box_x + self.twelth_x), self.action_box_text_top
         self.B_x, self.B_y = self.A_x, (self.A_y + (self.action_box_text_bottom / len(self.options)))
-        self.C_x, self.C_y = self.A_x, (self.B_y + (self.action_box_text_bottom / len(self.options)))
+        self.C_x, self.C_y = self.A_x, (self.B_y + 2 * (self.action_box_text_bottom / len(self.options))) # TO DO
         self.cursor_rect.midtop = (self.A_x + self.offset, self.A_y)  # Sets initial cursor pos to option A
 
     def display_action_block(self, options):  # This is a horrendous method, refactor later!
@@ -110,6 +94,21 @@ class LevelOne(Level):
             text_rect.midleft = (text_x_pos, text_y_pos)
             self.game.display.blit(text_surface, text_rect)
             text_y_pos += (self.action_box_text_bottom / len(options))
+
+    def display_controls(self):
+        self.game.draw_text(self.controls, 14, (self.game.mid_width, self.game.DISPLAY_H - 20))
+
+    def display_all_text(self, game_text, player_options):
+        if self.text_complete:
+            self.game.display.fill(self.game.BLACK)
+            self.display_text_block(game_text)
+            self.display_action_block(player_options)
+            self.display_controls()
+            self.draw_cursor()
+            self.game.blit_screen()
+        else:
+            self.game.display.fill(self.game.BLACK)
+            self.text_complete = self.display_text_animation(game_text)
 
     def check_input(self):
         self.move_cursor()
@@ -131,6 +130,13 @@ class LevelOne(Level):
             self.game.curr_menu = self.game.level_one_map
             self.game.playing = False
 
+    def next_level(self, level):
+        if level == "A":
+            self.game.game_options_selected.add("A")
+        if level == "B":
+            self.game.game_options_selected.add("B")
+        if level == "C":
+            self.game.game_options_selected.add("C")
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -161,14 +167,6 @@ class LevelOne(Level):
         while self.current_level == 1:
             self.game.events()
             self.check_input()
-            if self.text_complete:
-                self.game.display.fill(self.game.BLACK)
-                self.display_text_block(self.opening_text)
-                self.display_action_block(self.options)
-                self.game.draw_text(self.controls, 14, (self.game.mid_width, self.game.DISPLAY_H-20))
-                self.draw_cursor()
-                self.game.blit_screen()
-            else:
-                self.game.display.fill(self.game.BLACK)
-                self.text_complete = self.display_text_animation(self.opening_text)
+            self.display_all_text(self.opening_text, self.options)
+
 
