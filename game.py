@@ -21,6 +21,7 @@ class Game():
         pygame.display.set_caption("SOME COOL GAME NAME")
         self.display = pygame.Surface((self.window.get_size()))
         self.font = pygame.font.SysFont("Courier", 20)
+        self.action_font = pygame.font.SysFont("Courier", 16)
         self.BLACK = (0,0,0)
         self.GREEN = (0,255,0)
 
@@ -52,6 +53,11 @@ class Game():
         my_text = text_surface.convert_alpha()
         return my_text
 
+    def blit_screen(self):
+        self.window.blit(self.display, (0,0))
+        pygame.display.update()
+        self.reset_keys()
+
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -79,4 +85,3 @@ class Game():
         self.display.fill(self.BLACK)
         self.window.blit(self.display, (0, 0))
         pygame.display.update()
-        self.reset_keys()

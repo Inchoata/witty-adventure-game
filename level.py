@@ -9,11 +9,34 @@ class Level(Menu):
         self.cursor_rect = pygame.Rect(0, 0, 20, 20)  # Just makes a rect to represent the cursor
         self.offset = -5
 
+        # Text and option block templates
+        # Main text box
+        self.twelth_x = self.game.DISPLAY_W/12
+        self.twelth_y = self.game.DISPLAY_H/12
+        self.text_block_x = self.twelth_x
+        self.text_block_y = self.twelth_y
+
+        # Option block
+        # Box dimensions
+        self.action_box_x = self.twelth_x
+        self.action_box_y = self.twelth_y * 7
+        self.action_box_width = self.twelth_x * 10
+        self.action_box_height = self.twelth_y * 4
+        self.action_box_text_top = self.action_box_y + 30
+        self.action_box_text_bottom = self.action_box_height - 30
+
+
+        # Text positions
+
+
+
     def draw_cursor(self):
         self.game.draw_text('*', 15, (self.cursor_rect.x, self.cursor_rect.y))
 
 
-    def display_text_animation(self, text, w_pos, h_pos):
+    def display_text_animation(self, text):
+        w_pos = self.text_block_x
+        h_pos = self.text_block_y
         for line in text:
             for letter in self.split(line):
                 #self.game.check_input()
@@ -28,13 +51,15 @@ class Level(Menu):
         return self.text_complete
 
 
-    def display_text_block(self, text, w_pos, h_pos):
+    def display_text_block(self, text):
+        x_pos = self.text_block_x
+        y_pos = self.text_block_y
         for line in text:
             for letter in self.split(line):
-                self.game.draw_text(letter, 18, (w_pos, h_pos))
-                w_pos += 10
-            w_pos = 50
-            h_pos += 30
+                self.game.draw_text(letter, 18, (x_pos, y_pos))
+                x_pos += 10
+            x_pos = 50
+            y_pos += 30
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
 
@@ -48,12 +73,6 @@ class LevelOne(Level):
         Level.__init__(self, game)
         self.current_level = 1
 
-        # Positions for each option in the player action block
-        self.state = "A"
-        self.A_x, self.A_y = ((self.game.DISPLAY_W / 10) + 30), ((3 * (self.game.DISPLAY_H / 5)) + 20)
-        self.B_x, self.B_y = self.A_x, (self.A_y + (((self.game.DISPLAY_H / 3) - 30) / 4))
-        self.C_x, self.C_y = self.A_x, (self.B_y + 2*(((self.game.DISPLAY_H / 3) - 30) / 4))
-        self.cursor_rect.midtop = (self.A_x + self.offset, self.A_y)  # Sets initial cursor pos to start text
 
 
         self.opening_text = ["You awaken, head pounding. There is a bright light",
@@ -71,21 +90,26 @@ class LevelOne(Level):
 
         self.controls =      "I - Inventory         M - Map       ENTER - Main Menu"
 
+        # Positions for text in player action box
+        self.state = "A"
+        self.A_x, self.A_y = (self.action_box_x + self.twelth_x), self.action_box_text_top
+        self.B_x, self.B_y = self.A_x, (self.A_y + (self.action_box_text_bottom / len(self.options)))
+        self.C_x, self.C_y = self.A_x, (self.B_y + (self.action_box_text_bottom / len(self.options)))
+        self.cursor_rect.midtop = (self.A_x + self.offset, self.A_y)  # Sets initial cursor pos to option A
+
     def display_action_block(self, options):  # This is a horrendous method, refactor later!
-        x_pos = (self.game.DISPLAY_W / 10)
-        y_pos = 3 * (self.game.DISPLAY_H / 5)  # x and y of box top left
-        width = ((self.game.DISPLAY_W / 10) * 8)
-        height = ((self.game.DISPLAY_H / 3) - 30)
-        pygame.draw.rect(self.game.display, self.game.GREEN, (x_pos, y_pos, width, height), 1)
-        text_y_pos = y_pos + 20
-        text_x_pos = x_pos + 30
+        pygame.draw.rect(self.game.display, self.game.GREEN,
+                        (self.action_box_x, self.action_box_y,
+                        self.action_box_width, self.action_box_height), 1)
+        text_x_pos = self.action_box_x + self.twelth_x
+        text_y_pos = self.action_box_text_top
         for option in options:
-            text_font = pygame.font.SysFont("Courier", 16)
+            text_font = self.game.action_font
             text_surface = text_font.render(option, True, self.game.GREEN)
             text_rect = text_surface.get_rect()
             text_rect.midleft = (text_x_pos, text_y_pos)
             self.game.display.blit(text_surface, text_rect)
-            text_y_pos += (height / 4)
+            text_y_pos += (self.action_box_text_bottom / len(options))
 
     def check_input(self):
         self.move_cursor()
@@ -134,16 +158,17 @@ class LevelOne(Level):
         self.game.playing = True
         self.game.reset_screen()
         self.current_level = 1
-
         while self.current_level == 1:
-            self.game.reset_keys()
             self.game.events()
             self.check_input()
-
             if self.text_complete:
-                self.display_text_block(self.opening_text, 50, 100)
+                self.game.display.fill(self.game.BLACK)
+                self.display_text_block(self.opening_text)
                 self.display_action_block(self.options)
                 self.game.draw_text(self.controls, 14, (self.game.mid_width, self.game.DISPLAY_H-20))
                 self.draw_cursor()
+                self.game.blit_screen()
             else:
-                self.text_complete = self.display_text_animation(self.opening_text, 50, 100)
+                self.game.display.fill(self.game.BLACK)
+                self.text_complete = self.display_text_animation(self.opening_text)
+
