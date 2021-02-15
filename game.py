@@ -30,7 +30,7 @@ class Game():
         self.credits_menu = CreditsMenu(self)
         self.level_one_map = LevelOneMap(self)
         self.curr_menu = self.main_menu
-        self.game_options_selected = []
+        self.all_options_selected = []
 
         # Current menu. Self (current Game instance) given as parameter as MainMenu requires a game to be passed in.
 

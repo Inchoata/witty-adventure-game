@@ -13,6 +13,7 @@ class Level(Menu):
         # Text and option box setup
         self.text = Text()
         self.controls = self.text.controls
+        self.current_option_selected = ""
 
         # Main text box
         self.twelth_x = self.game.DISPLAY_W/12
@@ -115,10 +116,16 @@ class LevelOne(Level):
         if self.game.START_KEY:
             if self.state == "A":
                 print("Selected A")
+                self.current_option_selected = "A"
+                self.game.all_options_selected.append("A")
             elif self.state == "B":
                 print("Selected B")
+                self.current_option_selected = "B"
+                self.game.all_options_selected.append("A")
             elif self.state == "C":
                 print("Selected C")
+                self.current_option_selected = "C"
+                self.game.all_options_selected.append("A")
         elif self.game.I_KEY:
             print("I should show the inventory.")
             self.current_level = 0
@@ -129,14 +136,6 @@ class LevelOne(Level):
             self.current_level = 0
             self.game.curr_menu = self.game.level_one_map
             self.game.playing = False
-
-    def next_level(self, level):
-        if level == "A":
-            self.game.game_options_selected.add("A")
-        if level == "B":
-            self.game.game_options_selected.add("B")
-        if level == "C":
-            self.game.game_options_selected.add("C")
 
     def move_cursor(self):
         if self.game.DOWN_KEY:
@@ -168,5 +167,12 @@ class LevelOne(Level):
             self.game.events()
             self.check_input()
             self.display_all_text(self.opening_text, self.options)
-
-
+            if self.current_option_selected == "A":
+                # TO DO display next screen
+                pass
+            if self.current_option_selected == "B":
+                # TO DO display next screen
+                pass
+            if self.current_option_selected == "C":
+                # TO DO display next screen
+                pass
