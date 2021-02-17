@@ -15,3 +15,5 @@ class LevelOneText():
                             "B) Attempt to lean over to reach a scalpel ",
                             "   with your mouth.",
                             "C) Look around."]
+        self.legend =       ["Legend:           ",
+                             " X - You are here!"]

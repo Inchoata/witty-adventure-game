@@ -15,6 +15,8 @@ class Game():
         self.DISPLAY_W = 600
         self.mid_width = self.DISPLAY_W/2
         self.mid_height = self.DISPLAY_H/2
+        self.twelth_x = self.DISPLAY_W / 12
+        self.twelth_y = self.DISPLAY_H / 12
 
         #Initialise window
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
@@ -22,6 +24,7 @@ class Game():
         self.display = pygame.Surface((self.window.get_size()))
         self.font = pygame.font.SysFont("Courier", 20)
         self.action_font = pygame.font.SysFont("Courier", 16)
+        self.legend_font = pygame.font.SysFont("Courier", 12)
         self.BLACK = (0,0,0)
         self.GREEN = (0,255,0)
 
@@ -51,8 +54,7 @@ class Game():
         text_rect = text_surface.get_rect()
         text_rect.center = position
         self.display.blit(text_surface, text_rect)
-        my_text = text_surface.convert_alpha()
-        return my_text
+        return text_rect
 
     def blit_screen(self):
         self.window.blit(self.display, (0,0))
@@ -64,7 +66,7 @@ class Game():
             if event.type == pygame.QUIT:
                 self.running, self.playing = False, False
                 self.curr_menu.run_display = False
-                self.level_one.current_level = 0
+                self.level_one.current_level = 0 # This needs changing
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.START_KEY = True

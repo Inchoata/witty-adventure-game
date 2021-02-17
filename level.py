@@ -33,6 +33,9 @@ class Level(Menu):
     def draw_cursor(self):
         self.game.draw_text('*', 15, (self.cursor_rect.x, self.cursor_rect.y))
 
+    def display_controls(self):
+        self.game.draw_text(self.controls, 14, (self.game.mid_width, self.game.DISPLAY_H - 20))
+
     def display_text_animation(self, text):
         w_pos = self.text_block_x
         h_pos = self.text_block_y
@@ -49,7 +52,6 @@ class Level(Menu):
         self.text_complete = True
         return self.text_complete
 
-
     def display_text_block(self, text):
         x_pos = self.text_block_x
         y_pos = self.text_block_y
@@ -62,10 +64,8 @@ class Level(Menu):
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
 
-
     def split(self, word):
         return[char for char in word]
-
 
 class LevelOne(Level):
     def __init__(self, game):
@@ -95,9 +95,6 @@ class LevelOne(Level):
             text_rect.midleft = (text_x_pos, text_y_pos)
             self.game.display.blit(text_surface, text_rect)
             text_y_pos += (self.action_box_text_bottom / len(options))
-
-    def display_controls(self):
-        self.game.draw_text(self.controls, 14, (self.game.mid_width, self.game.DISPLAY_H - 20))
 
     def display_all_text(self, game_text, player_options):
         if self.text_complete:
@@ -135,6 +132,7 @@ class LevelOne(Level):
             print("I should be showing the map")
             self.current_level = 0
             self.game.curr_menu = self.game.level_one_map
+            self.game.curr_menu.run_display = True
             self.game.playing = False
 
     def move_cursor(self):
