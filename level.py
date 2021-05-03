@@ -71,15 +71,19 @@ class LevelOne(Level):
     def __init__(self, game):
         Level.__init__(self, game)
         self.current_level = 1
+
+        # Text setup
         self.text = LevelOneText()
         self.opening_text = self.text.opening_text
-        self.options = self.text.options
+        self.actions = self.text.actions
+        self.levelone_optionA = self.text.levelone_optionA
+        self.levelone_optionA_actions = self.text.levelone_optionA_actions
 
         # Positions for text in player action box
         self.state = "A"
         self.A_x, self.A_y = (self.action_box_x + self.twelth_x), self.action_box_text_top
-        self.B_x, self.B_y = self.A_x, (self.A_y + (self.action_box_text_bottom / len(self.options)))
-        self.C_x, self.C_y = self.A_x, (self.B_y + 2 * (self.action_box_text_bottom / len(self.options))) # TO DO
+        self.B_x, self.B_y = self.A_x, (self.A_y + (self.action_box_text_bottom / len(self.actions)))
+        self.C_x, self.C_y = self.A_x, (self.B_y + 2 * (self.action_box_text_bottom / len(self.actions))) # TO DO
         self.cursor_rect.midtop = (self.A_x + self.offset, self.A_y)  # Sets initial cursor pos to option A
 
     def display_action_block(self, options):  # This is a horrendous method, refactor later!
@@ -160,14 +164,16 @@ class LevelOne(Level):
     def show_level(self):
         self.game.playing = True
         self.game.reset_screen()
+        self.game.reset_keys()
         self.current_level = 1
         while self.current_level == 1:
             self.game.events()
             self.check_input()
-            self.display_all_text(self.opening_text, self.options)
+            self.display_all_text(self.opening_text, self.actions)
             if self.current_option_selected == "A":
-                # TO DO display next screen
-                pass
+                self.game.current_screen = 'optionA'
+                self.game.all_options_selected.append('A')
+                self.display_all_text(self.levelone_optionA, self.levelone_optionA_actions)
             if self.current_option_selected == "B":
                 # TO DO display next screen
                 pass

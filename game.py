@@ -33,6 +33,7 @@ class Game():
         self.credits_menu = CreditsMenu(self)
         self.level_one_map = LevelOneMap(self)
         self.curr_menu = self.main_menu
+        self.current_screen = ''
         self.all_options_selected = []
 
         # Current menu. Self (current Game instance) given as parameter as MainMenu requires a game to be passed in.
@@ -82,7 +83,7 @@ class Game():
                     self.M_KEY = True
 
     def reset_keys(self):
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.I_KEY = False, False, False, False, False
+        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY, self.I_KEY, self.M_KEY = False, False, False, False, False, False
 
     def reset_screen(self):
         self.display.fill(self.BLACK)
